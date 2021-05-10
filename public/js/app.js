@@ -94035,11 +94035,15 @@ function SideNavigation() {
     className: "metismenu-icon pe-7s-rocket"
   }), "Dashboard Example 1")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "app-sidebar__heading"
-  }, "Manage Links"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-    to: "/app/links/product/new"
+  }, "Manage Links"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    href: "#"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "metismenu-icon pe-7s-rocket"
-  }), "Create New Link")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+  }), "Create New Link"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    to: "/app/links/product/new"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    "class": "metismenu-icon"
+  }), "Product")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     to: "/app/links/all"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "metismenu-icon pe-7s-rocket"
@@ -95664,6 +95668,17 @@ function CreateNewProductLink() {
       productData = _useState4[0],
       setProductData = _useState4[1];
 
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+    campaignSource: '',
+    campaignMedium: '',
+    campaignName: '',
+    campaignTerm: '',
+    campaignContent: ''
+  }),
+      _useState6 = _slicedToArray(_useState5, 2),
+      formText = _useState6[0],
+      setFormText = _useState6[1];
+
   function HandleResourcePicker(resource) {
     axios__WEBPACK_IMPORTED_MODULE_3___default.a.post('/app/graphql', {
       query: "\n            {\n                product(id: \"".concat(resource.selection[0].id, "\"){\n                    onlineStoreUrl\n                }\n            }\n            ")
@@ -95679,11 +95694,18 @@ function CreateNewProductLink() {
       setProductData(productInfo);
     })["catch"](function (error) {
       console.log(error);
-    }).then(function () {});
+    });
+  }
+
+  function handleText(name, text) {
+    var newState = _defineProperty({}, name, text);
+
+    setFormText(_objectSpread(_objectSpread({}, formText), newState));
+    console.log(formText);
   }
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_shopify_app_bridge_react__WEBPACK_IMPORTED_MODULE_1__["TitleBar"], {
-    title: "Create New Link"
+    title: "Create New Product Link"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_shopify_app_bridge_react__WEBPACK_IMPORTED_MODULE_1__["ResourcePicker"], {
     resourceType: "Product",
     open: resourcePickerOpen,
@@ -95698,7 +95720,7 @@ function CreateNewProductLink() {
     className: "page-title-icon"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "pe-7s-display1 icon-gradient bg-premium-dark"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Create A New Link", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Create A New Product Link", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "page-title-subheading"
   }, "Choose a product and create a link to promote it."))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "page-title-actions"
@@ -95712,7 +95734,9 @@ function CreateNewProductLink() {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "fa fa-business-time fa-w-20"
   })), "Save"))))), productData == false ? "" : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Content, {
-    productData: productData
+    productData: productData,
+    formText: formText,
+    handleText: handleText
   }));
 }
 
@@ -95737,62 +95761,82 @@ function Content(props) {
     placeholder: "Product URL",
     type: "text",
     className: "form-control",
-    defaultValue: props.productData.productUrl
+    defaultValue: ""
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "position-relative form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     htmlFor: "campaignSource",
     className: ""
   }, "Campaign Source"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    onChange: function onChange(event) {
+      return props.handleText('campaignSource', event.target.value);
+    },
     name: "campaignSource",
     id: "campaignSource",
     placeholder: "Google, Youtube, Instagram",
     type: "text",
-    className: "form-control"
+    className: "form-control",
+    value: props.formText.campaignSource
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "position-relative form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     htmlFor: "campaignMedium",
     className: ""
   }, "Campaign Medium"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    onChange: function onChange(event) {
+      return props.handleText('campaignMedium', event.target.value);
+    },
     name: "campaignMedium",
     id: "campaignMedium",
     placeholder: "CPC, Banner, Instagram Profile Link",
     type: "text",
-    className: "form-control"
+    className: "form-control",
+    value: props.formText.campaignMedium
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "position-relative form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     htmlFor: "campaignName",
     className: ""
   }, "Campaign Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    onChange: function onChange(event) {
+      return props.handleText('campaignName', event.target.value);
+    },
     name: "campaignName",
     id: "campaignName",
     placeholder: "50July42020, Labor Day 2020, COUPON234KID",
     type: "text",
-    className: "form-control"
+    className: "form-control",
+    value: props.formText.campaignName
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "position-relative form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     htmlFor: "campaignTerm",
     className: ""
   }, "Campaign Term (Optional)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    onChange: function onChange(event) {
+      return props.handleText('campaignTerm', event.target.value);
+    },
     name: "campaignTerm",
     id: "campaignTerm",
     placeholder: "Add Paid Keywords",
     type: "text",
-    className: "form-control"
+    className: "form-control",
+    value: props.formText.campaignTerm
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "position-relative form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     htmlFor: "campaignContent",
     className: ""
   }, "Campaign Content"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    onChange: function onChange(event) {
+      return props.handleText('campaignContent', event.target.value);
+    },
     name: "campaignContent",
     id: "campaignContent",
     placeholder: "Girl With Laptop Image Ad, Image3, Banner 5",
     type: "text",
-    className: "form-control"
+    className: "form-control",
+    value: props.formText.campaignContent
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "mt-1 btn btn-primary"
   }, "Submit"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -95816,13 +95860,7 @@ function Content(props) {
     className: "card-title"
   }, "Link Preview"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "position-relative form-group"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
-    name: "linkPreview",
-    id: "linkPreview",
-    disabled: true,
-    type: "text",
-    className: "form-control"
-  })))))));
+  }, "".concat(props.productData.productUrl, "?").concat(props.formText.campaignSource == '' ? '' : "utm_source=".concat(props.formText.campaignSource.replace(/ /g, '%20'))).concat(props.formText.campaignMedium == '' ? '' : "&utm_medium=".concat(props.formText.campaignMedium.replace(/ /g, '%20'))).concat(props.formText.campaignName == '' ? '' : "&utm_campaign=".concat(props.formText.campaignName.replace(/ /g, '%20'))).concat(props.formText.campaignTerm == '' ? '' : "&utm_term=".concat(props.formText.campaignTerm)).concat(props.formText.campaignContent == '' ? '' : "&utm_campaign=".concat(props.formText.campaignContent))))))));
 }
 
 /***/ }),

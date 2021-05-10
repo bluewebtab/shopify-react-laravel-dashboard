@@ -11,6 +11,14 @@ export default function CreateNewProductLink() {
 
     const [resourcePickerOpen, setResourcePickerOpen] = useState(true)
     const [productData, setProductData] = useState(false)
+    const [formText, setFormText] = useState({
+        campaignSource: '',
+        campaignMedium: '',
+        campaignName: '',
+        campaignTerm: '',
+        campaignContent: ''
+    })
+
 
     function HandleResourcePicker(resource){
         axios.post('/app/graphql', {
@@ -37,14 +45,22 @@ export default function CreateNewProductLink() {
         .catch(function(error){
             console.log(error)
         })
-        .then(function(){
-
-        })
+       
     }
 
+    function handleText(name, text){
+        let newState = {
+            [name]: text
+        }
+        setFormText({
+            ...formText,
+            ...newState
+        })
+        console.log(formText)
+    }
     return (
         <>
-            <TitleBar title="Create New Link" />
+            <TitleBar title="Create New Product Link" />
             <ResourcePicker resourceType="Product" open={resourcePickerOpen} onSelection={HandleResourcePicker} />
             <div className={productData == false ? "app-page-title d-none" : "app-page-title"}>
                 <div className="page-title-wrapper">
@@ -53,7 +69,7 @@ export default function CreateNewProductLink() {
                             <i className="pe-7s-display1 icon-gradient bg-premium-dark"></i>
                         </div>
                         <div>
-                            Create A New Link
+                            Create A New Product Link
                             <div className="page-title-subheading">
                                 Choose a product and create a link to promote
                                 it.
@@ -75,7 +91,7 @@ export default function CreateNewProductLink() {
                     </div>
                 </div>
             </div>
-            {productData == false ? "" : <Content productData={productData} />}
+            {productData == false ? "" : <Content productData={productData} formText={formText} handleText={handleText} />}
         </>
     );
 }
@@ -98,7 +114,7 @@ function Content(props){
                                         placeholder="Product URL"
                                         type="text"
                                         className="form-control"
-                                        defaultValue={props.productData.productUrl}
+                                        defaultValue=""
                                     />
                                 </div>
                                 <div className="position-relative form-group">
@@ -106,11 +122,13 @@ function Content(props){
                                         Campaign Source
                                     </label>
                                     <input
+                                        onChange={(event) => props.handleText('campaignSource',  event.target.value)}
                                         name="campaignSource"
                                         id="campaignSource"
                                         placeholder="Google, Youtube, Instagram"
                                         type="text"
                                         className="form-control"
+                                        value={props.formText.campaignSource}
                                     />
                                 </div>
                                 <div className="position-relative form-group">
@@ -118,11 +136,13 @@ function Content(props){
                                         Campaign Medium
                                     </label>
                                     <input
+                                        onChange={(event) => props.handleText('campaignMedium', event.target.value)}
                                         name="campaignMedium"
                                         id="campaignMedium"
                                         placeholder="CPC, Banner, Instagram Profile Link"
                                         type="text"
                                         className="form-control"
+                                        value={props.formText.campaignMedium}
                                     />
                                 </div>
                                 <div className="position-relative form-group">
@@ -130,11 +150,13 @@ function Content(props){
                                         Campaign Name
                                     </label>
                                     <input
+                                        onChange={(event) => props.handleText('campaignName', event.target.value)}
                                         name="campaignName"
                                         id="campaignName"
                                         placeholder="50July42020, Labor Day 2020, COUPON234KID"
                                         type="text"
                                         className="form-control"
+                                        value={props.formText.campaignName}
                                     />
                                 </div>
                                 <div className="position-relative form-group">
@@ -142,11 +164,13 @@ function Content(props){
                                         Campaign Term (Optional)
                                     </label>
                                     <input
+                                        onChange={(event) => props.handleText('campaignTerm', event.target.value)}
                                         name="campaignTerm"
                                         id="campaignTerm"
                                         placeholder="Add Paid Keywords"
                                         type="text"
                                         className="form-control"
+                                        value={props.formText.campaignTerm}
                                     />
                                 </div>
                                 <div className="position-relative form-group">
@@ -154,11 +178,13 @@ function Content(props){
                                         Campaign Content
                                     </label>
                                     <input
+                                        onChange={(event) => props.handleText('campaignContent', event.target.value)}
                                         name="campaignContent"
                                         id="campaignContent"
                                         placeholder="Girl With Laptop Image Ad, Image3, Banner 5"
                                         type="text"
                                         className="form-control"
+                                        value={props.formText.campaignContent}
                                     />
                                 </div>
                                
@@ -186,13 +212,7 @@ function Content(props){
                           
                             <h5 className="card-title">Link Preview</h5>
                             <div className="position-relative form-group">
-                                    <textarea
-                                        name="linkPreview"
-                                        id="linkPreview"
-                                        disabled
-                                        type="text"
-                                        className="form-control"
-                                    />
+                                {`${props.productData.productUrl}?${props.formText.campaignSource == '' ? '' : `utm_source=${props.formText.campaignSource.replace(/ /g, '%20')}`}${props.formText.campaignMedium == '' ? '' : `&utm_medium=${props.formText.campaignMedium.replace(/ /g, '%20')}`}${props.formText.campaignName == '' ? '' : `&utm_campaign=${props.formText.campaignName.replace(/ /g, '%20')}`}${props.formText.campaignTerm == '' ? '' : `&utm_term=${props.formText.campaignTerm}`}${props.formText.campaignContent == '' ? '' : `&utm_campaign=${props.formText.campaignContent}`}`}
                             </div>
                         </div>
                     </div>
